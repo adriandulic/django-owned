@@ -1,0 +1,9 @@
+============
+Django Owned
+============
+
+A generic row level permissions application for `Django` - projects,
+which allows to associate Django auth.User with any model in your app.
+
+.. _`Django`: http://www.djangoproject.com
+
