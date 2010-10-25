@@ -7,12 +7,12 @@ from notes.models import Note
 
 urlpatterns = patterns('',
     url(r'^$',
-	    'owned.generic.owned_object_list',
-		dict(queryset=Note.objects.all()),
-	    name='list_notes'),
+        'owned.generic.owned_object_list',
+        dict(queryset=Note.objects.all()),
+        name='list_notes'),
     url(r'^view/(?P<object_id>\d+)/?$',
         'owned.generic.owned_object_detail',
-		dict(queryset=Note.objects.all()),
+        dict(queryset=Note.objects.all()),
         name='view_note'),
     
     # Example:
