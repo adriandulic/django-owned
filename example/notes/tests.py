@@ -1,11 +1,11 @@
 __test__ = {"doctest": """
 >>> from notes.models import Note
 >>> from notes.forms import NoteForm
->>> from django.contrib.auth.models import User
+>>> from django.contrib.auth.models import User, AnonymousUser
 >>> from owned.generic import *
 
 # create some users
->>> guest = User.objects.create_user("guest", "guest@example.com")
+>>> guest = AnonymousUser()
 >>> owner = User.objects.create_user("owner", "owner@example.com")
 
 # create note object
@@ -31,16 +31,30 @@ __test__ = {"doctest": """
 >>> Note.objects.owned_by(owner)
 [<Note: Note object>, <Note: Note object>]
 
-# helper generic methods
 >>> get_owned_object(Note, owner, pk=1).title
 u'Some title'
 >>> get_owned_object(Note, guest, pk=1)
 Traceback (most recent call last):
 ...
 DoesNotExist: Note matching query does not exist.
+
 >>> [note.title for note in get_owned_list(Note, owner)]
 [u'Some title', u'New title']
 >>> [note.title for note in get_owned_list(Note, guest)]
 []
+
+>>> get_owned_object_or_404(Note, owner, pk=1).title
+u'Some title'
+>>> get_owned_object_or_404(Note, guest)
+Traceback (most recent call last):
+...
+Http404: No Note matches the given query.
+
+>>> [note.title for note in get_owned_list_or_404(Note, owner)]
+[u'Some title', u'New title']
+>>> [note.title for note in get_owned_list_or_404(Note, guest)]
+Traceback (most recent call last):
+...
+Http404: No Note matches the given query.
 """}
 

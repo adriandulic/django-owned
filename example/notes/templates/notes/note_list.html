@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+	{% for note in objects %}
+		<h1>Note : {{ object.title }}</h1>
+		<p>{{ object.content }}</p>
+		<small>Author: {{ object.owner.username }}</small>
+		<hr/>
+	{% empty %}
+		<p>No notes for {{ user }}</p>
+	{% endfor %}
+{% endblock %}

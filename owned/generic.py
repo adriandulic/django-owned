@@ -2,6 +2,7 @@ from django.conf import settings
 from django.views.generic import GenericViewError
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.views.generic.list_detail import object_list, object_detail
+from django.contrib.auth.models import User
 
 def owned_object_detail(request, *args, **kwargs):
     """
@@ -43,8 +44,8 @@ def object_filters(user=None, **kwargs):
     """
     Prepare kwargs to filter single object
     """
-    if user and user.is_authenticated():
-        kwargs[settings.OWNED_FIELD_NAME] = user
+    user_pk = user.pk if isinstance(user, User) else None
+    kwargs.update({settings.OWNED_FIELD_NAME: user_pk})
     return kwargs
 
 def generic_filters(request, **kwargs):
@@ -52,10 +53,9 @@ def generic_filters(request, **kwargs):
     Modify kwargs['queryset'] for generic views to filter objects
     """
     try:
-        kwargs['queryset'] = kwargs.pop('queryset')
-        lookup_kwargs = {settings.OWNED_FIELD_NAME: request.user}
+        queryset = kwargs.pop('queryset')
+        queryset = queryset.filter(**object_filters(request.user))
+        kwargs['queryset'] = queryset
+        return kwargs
     except KeyError:
-        raise GenericViewError('Queryset parameter is missing')
-    if not request.user.is_authenticated():
-        kwargs['queryset'] = queryset.filter(**lookup_kwargs)
-    return kwargs
+        raise GenericViewError, 'Attribute "queryset" is missing'
