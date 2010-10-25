@@ -6,7 +6,7 @@ def packages():
     packages = []
     for path, dirs, files in os.walk("."):
         if '.svn' in dirs:
-			dirs.remove('.svn')
+            dirs.remove('.svn')
         if '__init__.py' in files:
             packages.append(path.replace(os.sep, "."))
     return packages
