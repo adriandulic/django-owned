@@ -14,7 +14,7 @@ def packages():
 setup(
     name='django-owned',
     version=__import__('owned').__version__,
-    description='Generic row level permissions for the Django web framework',
+    description='Model object ownership for Django',
     long_description=open('docs/overview.txt').read(),
     author='Adrian Dulić',
     author_email='adulic@gmail.com',
